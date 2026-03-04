@@ -11,6 +11,14 @@ const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
   WHATSAPP_MESSAGE
 )}`;
 
+const EMAIL_TO = "josecsx4@gmail.com";
+const EMAIL_SUBJECT = "Interesado en CS Technology";
+const EMAIL_BODY =
+  "Hola, estoy interesado en el producto de CS Technology.\n\nMi nombre es:\nEmpresa:\nTeléfono:\nMensaje:\n";
+const mailLink = `mailto:${EMAIL_TO}?subject=${encodeURIComponent(
+  EMAIL_SUBJECT
+)}&body=${encodeURIComponent(EMAIL_BODY)}`;
+
 const fade = {
   hidden: { opacity: 0, y: 18 },
   visible: (i: number) => ({
@@ -130,7 +138,7 @@ export default function Home() {
     <div className="min-h-screen text-[#0b1220]">
       <BackgroundFX />
 
-      {/* NAVBAR (una sola) */}
+      {/* NAVBAR */}
       <header className="sticky top-0 z-30 border-b border-black/5 bg-white/70 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
           <Link href="/" className="flex items-center gap-3">
@@ -145,17 +153,18 @@ export default function Home() {
             </div>
           </Link>
 
+          {/* IMPORTANTE: /#... para historial (Atrás vuelve) */}
           <nav className="hidden items-center gap-7 md:flex text-sm text-black/70">
-            <a href="#producto" className="hover:text-black">
+            <a href="/#producto" className="hover:text-black">
               Producto
             </a>
-            <a href="#soluciones" className="hover:text-black">
+            <a href="/#soluciones" className="hover:text-black">
               Soluciones
             </a>
-            <a href="#beneficios" className="hover:text-black">
+            <a href="/#beneficios" className="hover:text-black">
               Beneficios
             </a>
-            <a href="#contacto" className="hover:text-black">
+            <a href="/#contacto" className="hover:text-black">
               Contacto
             </a>
             <Link
@@ -228,7 +237,7 @@ export default function Home() {
                 Hablar por WhatsApp
               </a>
               <a
-                href="#producto"
+                href="/#producto"
                 className="rounded-2xl border border-black/10 bg-white/70 px-6 py-3 text-sm font-semibold text-black hover:bg-black/[0.03]"
               >
                 Ver producto
@@ -250,7 +259,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* IMAGEN: ahora llena el marco sin verse “rara” */}
+          {/* IMAGEN HERO */}
           <motion.div
             className="relative overflow-hidden rounded-3xl border border-black/10 bg-white shadow-xl"
             initial={{ opacity: 0, y: 18 }}
@@ -258,13 +267,11 @@ export default function Home() {
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/10 via-transparent to-yellow-300/10" />
-
             <div className="relative h-[420px] w-full">
               <Image
                 src="/brand/hero-papas.png"
                 alt="Agroindustria"
                 fill
-                // object-cover para que ENCAJE, y object-position para no cortar caras
                 className="object-cover object-[50%_20%]"
                 priority
               />
@@ -280,7 +287,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PRODUCTO (volvió) */}
+      {/* PRODUCTO */}
       <section id="producto" className="mx-auto max-w-6xl px-5 py-10">
         <div className="rounded-3xl border border-black/10 bg-white/70 p-8 shadow-sm">
           <div className="grid gap-8 md:grid-cols-2 md:items-center">
@@ -309,17 +316,22 @@ export default function Home() {
                 ))}
               </div>
 
-              <div className="mt-6">
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <a
                   href={waLink}
                   className="inline-flex rounded-2xl bg-emerald-700 px-6 py-3 text-sm font-semibold text-white hover:opacity-95"
                 >
                   Pedir demo por WhatsApp
                 </a>
+                <a
+                  href={mailLink}
+                  className="inline-flex rounded-2xl border border-black/10 bg-white px-6 py-3 text-sm font-semibold text-black hover:bg-black/[0.03]"
+                >
+                  Enviar email
+                </a>
               </div>
             </div>
 
-            {/* Mockup simple (visual) */}
             <div className="relative overflow-hidden rounded-3xl border border-black/10 bg-white shadow-sm">
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-yellow-300/10" />
               <div className="relative p-6">
@@ -435,30 +447,32 @@ export default function Home() {
               </a>
 
               <a
-                href="mailto:contacto@cstechnology.com.ar"
+                href={mailLink}
                 className="rounded-2xl border border-black/10 bg-white px-6 py-3 text-sm font-semibold text-black hover:bg-black/[0.03]"
               >
                 Enviar email
               </a>
             </div>
 
-            <p className="mt-4 text-xs text-black/45">WhatsApp: +{WHATSAPP_NUMBER}</p>
+            <p className="mt-4 text-xs text-black/45">
+              WhatsApp: +{WHATSAPP_NUMBER} · Email: {EMAIL_TO}
+            </p>
           </div>
         </div>
 
         <footer className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-black/10 pt-6 text-xs text-black/50 md:flex-row">
           <p>© {new Date().getFullYear()} CS Technology</p>
           <div className="flex gap-4">
-            <a className="hover:text-black" href="#producto">
+            <a className="hover:text-black" href="/#producto">
               Producto
             </a>
-            <a className="hover:text-black" href="#soluciones">
+            <a className="hover:text-black" href="/#soluciones">
               Soluciones
             </a>
-            <a className="hover:text-black" href="#beneficios">
+            <a className="hover:text-black" href="/#beneficios">
               Beneficios
             </a>
-            <a className="hover:text-black" href="#contacto">
+            <a className="hover:text-black" href="/#contacto">
               Contacto
             </a>
           </div>
