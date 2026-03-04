@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 const WHATSAPP_NUMBER = "5493513454027";
 const WHATSAPP_MESSAGE =
   "Hola! Quiero información sobre CS Technology. Me interesa automatización / datos para agroindustria.";
-
 const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
   WHATSAPP_MESSAGE
 )}`;
@@ -34,12 +33,12 @@ const solutions = [
   },
   {
     title: "IoT & Sensores",
-    desc: "Telemetría, monitoreo y alertas. Integración con hardware y servicios en tiempo real.",
+    desc: "Telemetría, monitoreo y alertas. Integración con hardware en tiempo real.",
     tag: "IOT",
   },
   {
     title: "Software a medida",
-    desc: "Webs, paneles admin, APIs y herramientas internas que se adaptan a tu operación.",
+    desc: "Webs, paneles admin, APIs y herramientas internas adaptadas a tu operación.",
     tag: "DEV",
   },
   {
@@ -59,7 +58,7 @@ const tech = ["OpenAI", "PostgreSQL", "Neon", "Vercel", "Next.js", "Node.js"];
 function LogoRound({
   src,
   alt,
-  size = 44,
+  size = 56,
 }: {
   src: string;
   alt: string;
@@ -76,10 +75,8 @@ function LogoRound({
 }
 
 function BackgroundFX() {
-  // Fondo claro con: blobs animados + grilla sutil + partículas suaves
   return (
     <div className="pointer-events-none fixed inset-0 -z-10">
-      {/* Base */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#f4fbf5] via-white to-[#fffdf4]" />
 
       {/* Grid sutil */}
@@ -103,17 +100,11 @@ function BackgroundFX() {
         animate={{ x: [0, -30, 0], y: [0, -20, 0] }}
         transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
       />
-      <motion.div
-        className="absolute top-[25%] -right-40 h-[420px] w-[420px] rounded-full bg-lime-200/35 blur-[100px]"
-        animate={{ x: [0, -18, 0], y: [0, 18, 0] }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-      />
 
       {/* Partículas suaves */}
       <div className="absolute inset-0">
         {Array.from({ length: 14 }).map((_, i) => (
           <motion.span
-            // eslint-disable-next-line react/no-array-index-key
             key={i}
             className="absolute h-2 w-2 rounded-full bg-emerald-400/20"
             style={{
@@ -139,13 +130,13 @@ export default function Home() {
     <div className="min-h-screen text-[#0b1220]">
       <BackgroundFX />
 
-      {/* NAVBAR */}
+      {/* NAVBAR (una sola) */}
       <header className="sticky top-0 z-30 border-b border-black/5 bg-white/70 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
           <Link href="/" className="flex items-center gap-3">
-            <LogoRound src="/brand/logo-cosechadora.png" alt="CS" size={44} />
+            <LogoRound src="/brand/logo-cosechadora.png" alt="CS" size={56} />
             <div className="leading-tight">
-              <div className="font-semibold text-[15px]">
+              <div className="font-semibold text-[16px]">
                 CS <span className="text-emerald-700">Technology</span>
               </div>
               <div className="text-[12px] text-black/55">
@@ -155,6 +146,9 @@ export default function Home() {
           </Link>
 
           <nav className="hidden items-center gap-7 md:flex text-sm text-black/70">
+            <a href="#producto" className="hover:text-black">
+              Producto
+            </a>
             <a href="#soluciones" className="hover:text-black">
               Soluciones
             </a>
@@ -173,18 +167,17 @@ export default function Home() {
           </nav>
 
           <a
-            href="#contacto"
+            href={waLink}
             className="md:hidden rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white"
           >
-            Contacto
+            WhatsApp
           </a>
         </div>
       </header>
 
       {/* HERO */}
-      <section className="mx-auto max-w-6xl px-5 pt-10 pb-10 md:pt-16">
+      <section className="mx-auto max-w-6xl px-5 pt-10 pb-10 md:pt-14">
         <div className="grid items-center gap-10 md:grid-cols-2">
-          {/* Texto */}
           <div>
             <motion.div
               className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-2 text-xs text-black/70"
@@ -235,22 +228,14 @@ export default function Home() {
                 Hablar por WhatsApp
               </a>
               <a
-                href="#soluciones"
+                href="#producto"
                 className="rounded-2xl border border-black/10 bg-white/70 px-6 py-3 text-sm font-semibold text-black hover:bg-black/[0.03]"
               >
-                Ver soluciones
+                Ver producto
               </a>
             </motion.div>
 
-            {/* Tira tech */}
-            <motion.div
-              className="mt-10"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-80px" }}
-              variants={fade}
-              custom={0}
-            >
+            <div className="mt-10">
               <p className="text-xs text-black/50">Tecnologías que usamos</p>
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 {tech.map((t) => (
@@ -262,33 +247,31 @@ export default function Home() {
                   </span>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
 
-          {/* Imagen: sin cortar */}
+          {/* IMAGEN: ahora llena el marco sin verse “rara” */}
           <motion.div
             className="relative overflow-hidden rounded-3xl border border-black/10 bg-white shadow-xl"
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            {/* overlay suave */}
             <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/10 via-transparent to-yellow-300/10" />
 
-            {/* IMPORTANTE: object-contain para que NO corte */}
             <div className="relative h-[420px] w-full">
               <Image
                 src="/brand/hero-papas.png"
                 alt="Agroindustria"
                 fill
-                className="object-contain"
+                // object-cover para que ENCAJE, y object-position para no cortar caras
+                className="object-cover object-[50%_20%]"
                 priority
               />
             </div>
 
-            {/* marca en esquina */}
-            <div className="absolute bottom-4 right-4 flex items-center gap-2 rounded-2xl border border-black/10 bg-white/75 px-3 py-2 backdrop-blur">
-              <LogoRound src="/brand/logo-cosechadora.png" alt="CS" size={30} />
+            <div className="absolute bottom-4 right-4 flex items-center gap-2 rounded-2xl border border-black/10 bg-white/80 px-3 py-2 backdrop-blur">
+              <LogoRound src="/brand/logo-cosechadora.png" alt="CS" size={42} />
               <span className="text-xs font-semibold text-black/70">
                 CS Technology
               </span>
@@ -297,27 +280,85 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SOLUCIONES (con “cambio suave de área” pero claro) */}
-      <section
-        id="soluciones"
-        className="mx-auto max-w-6xl px-5 py-14"
-      >
+      {/* PRODUCTO (volvió) */}
+      <section id="producto" className="mx-auto max-w-6xl px-5 py-10">
         <div className="rounded-3xl border border-black/10 bg-white/70 p-8 shadow-sm">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-80px" }}
-            variants={fade}
-            custom={0}
-          >
-            <p className="text-xs text-black/50">CS Technology</p>
-            <h2 className="mt-2 text-2xl font-semibold md:text-3xl">
-              Soluciones principales
-            </h2>
-            <p className="mt-3 max-w-2xl text-black/65">
-              Un stack moderno para agro: datos confiables, automatización y software robusto.
-            </p>
-          </motion.div>
+          <div className="grid gap-8 md:grid-cols-2 md:items-center">
+            <div>
+              <p className="text-xs text-black/50">Producto</p>
+              <h2 className="mt-2 text-2xl font-semibold md:text-3xl">
+                Panel de control + automatización para tu operación
+              </h2>
+              <p className="mt-3 text-black/65">
+                Centralizá indicadores, alertas y flujos. Menos “parches”, más sistema.
+              </p>
+
+              <div className="mt-6 grid gap-3">
+                {[
+                  "KPIs de producción y calidad en tiempo real",
+                  "Alertas automáticas (WhatsApp / email)",
+                  "Trazabilidad por lote / campaña / planta",
+                  "Integración con ERP/CRM y sensores",
+                ].map((x) => (
+                  <div
+                    key={x}
+                    className="rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm text-black/70"
+                  >
+                    {x}
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6">
+                <a
+                  href={waLink}
+                  className="inline-flex rounded-2xl bg-emerald-700 px-6 py-3 text-sm font-semibold text-white hover:opacity-95"
+                >
+                  Pedir demo por WhatsApp
+                </a>
+              </div>
+            </div>
+
+            {/* Mockup simple (visual) */}
+            <div className="relative overflow-hidden rounded-3xl border border-black/10 bg-white shadow-sm">
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-yellow-300/10" />
+              <div className="relative p-6">
+                <div className="rounded-2xl border border-black/10 bg-white p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm font-semibold">Dashboard</div>
+                    <div className="text-xs text-black/50">Hoy</div>
+                  </div>
+                  <div className="mt-4 grid grid-cols-2 gap-3">
+                    {["Eficiencia", "Rendimiento", "Calidad", "Alertas"].map((k) => (
+                      <div
+                        key={k}
+                        className="rounded-xl border border-black/10 bg-white px-3 py-4"
+                      >
+                        <div className="text-xs text-black/50">{k}</div>
+                        <div className="mt-2 text-lg font-semibold text-emerald-700">
+                          {Math.floor(70 + Math.random() * 25)}%
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-4 h-24 rounded-xl border border-black/10 bg-gradient-to-r from-emerald-200/30 to-yellow-200/30" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SOLUCIONES */}
+      <section id="soluciones" className="mx-auto max-w-6xl px-5 py-10">
+        <div className="rounded-3xl border border-black/10 bg-white/70 p-8 shadow-sm">
+          <p className="text-xs text-black/50">CS Technology</p>
+          <h2 className="mt-2 text-2xl font-semibold md:text-3xl">
+            Soluciones principales
+          </h2>
+          <p className="mt-3 max-w-2xl text-black/65">
+            Datos confiables, automatización y software robusto para agroindustria.
+          </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {solutions.map((s, i) => (
@@ -348,7 +389,7 @@ export default function Home() {
       </section>
 
       {/* BENEFICIOS */}
-      <section id="beneficios" className="mx-auto max-w-6xl px-5 pb-14">
+      <section id="beneficios" className="mx-auto max-w-6xl px-5 pb-10">
         <div className="grid gap-6 md:grid-cols-3">
           {[
             { k: "Tiempo", v: "Procesos más rápidos y menos errores operativos." },
@@ -401,15 +442,16 @@ export default function Home() {
               </a>
             </div>
 
-            <p className="mt-4 text-xs text-black/45">
-              WhatsApp: +{WHATSAPP_NUMBER}
-            </p>
+            <p className="mt-4 text-xs text-black/45">WhatsApp: +{WHATSAPP_NUMBER}</p>
           </div>
         </div>
 
         <footer className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-black/10 pt-6 text-xs text-black/50 md:flex-row">
           <p>© {new Date().getFullYear()} CS Technology</p>
           <div className="flex gap-4">
+            <a className="hover:text-black" href="#producto">
+              Producto
+            </a>
             <a className="hover:text-black" href="#soluciones">
               Soluciones
             </a>
