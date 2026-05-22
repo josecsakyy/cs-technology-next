@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 const WHATSAPP_NUMBER = "5493513454027";
@@ -62,6 +63,17 @@ const solutions = [
 ];
 
 const tech = ["OpenAI", "PostgreSQL", "Neon", "Vercel", "Next.js", "Node.js"];
+
+type RssiData = {
+  samples: [number, number][];
+  last_rx_at: number;
+  last_rssi: number | null;
+  last_seq: string;
+  sender_mac: string;
+  receiver_mac: string;
+  serial_error?: string;
+  port?: string;
+};
 
 function LogoRound({
   src,
@@ -128,6 +140,187 @@ function BackgroundFX() {
             }}
           />
         ))}
+      </div>
+    </div>
+  );
+}
+
+function classifyRssi(rssi: number | null) {
+  if (rssi === null) return "sin señal";
+  if (rssi >= -55) return "excelente";
+  if (rssi >= -67) return "buena";
+  if (rssi >= -75) return "media";
+  if (rssi >= -85) return "débil";
+  return "muy débil";
+}
+
+function RssiLiveChart() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [data, setData] = useState<RssiData>({
+    samples: [],
+    last_rx_at: 0,
+    last_rssi: null,
+    last_seq: "-",
+    sender_mac: "-",
+    receiver_mac: "-",
+    port: "COM6",
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function poll() {
+      try {
+        const response = await fetch("http://127.0.0.1:8765/data", {
+          cache: "no-store",
+        });
+        const payload = (await response.json()) as RssiData;
+        if (!cancelled) setData(payload);
+      } catch {
+        if (!cancelled) {
+          setData((current) => ({
+            ...current,
+            last_rx_at: 0,
+            last_rssi: null,
+            serial_error: "No se pudo leer RSSI",
+          }));
+        }
+      }
+    }
+
+    poll();
+    const timer = window.setInterval(poll, 500);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.max(420, Math.floor(rect.width * dpr));
+    canvas.height = Math.max(116, Math.floor(rect.height * dpr));
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const width = rect.width;
+    const height = rect.height;
+    const left = 38;
+    const right = width - 12;
+    const top = 10;
+    const bottom = height - 26;
+    const yMin = -95;
+    const yMax = -30;
+    const windowSeconds = 120;
+
+    const signalRecent =
+      data.last_rx_at > 0 && Date.now() / 1000 - data.last_rx_at < 3.5;
+
+    const yToPx = (rssi: number) => {
+      const value = Math.max(yMin, Math.min(yMax, rssi));
+      const ratio = (value - yMin) / (yMax - yMin);
+      return bottom - ratio * (bottom - top);
+    };
+
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = "rgba(255,255,255,0.58)";
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.strokeStyle = "rgba(15,23,42,0.12)";
+    ctx.strokeRect(left, top, right - left, bottom - top);
+
+    ctx.font = "10px Arial";
+    ctx.fillStyle = "rgba(15,23,42,0.55)";
+    [-45, -70, -85].forEach((rssi) => {
+      const y = yToPx(rssi);
+      ctx.strokeStyle = "rgba(15,23,42,0.12)";
+      ctx.beginPath();
+      ctx.moveTo(left, y);
+      ctx.lineTo(right, y);
+      ctx.stroke();
+      ctx.fillText(String(rssi), 8, y + 3);
+    });
+
+    const samples = data.samples ?? [];
+    if (samples.length >= 2) {
+      const end = Math.max(windowSeconds, samples[samples.length - 1][0]);
+      const start = Math.max(0, end - windowSeconds);
+      const xToPx = (time: number) =>
+        left +
+        Math.max(0, Math.min(1, (time - start) / windowSeconds)) *
+          (right - left);
+
+      ctx.strokeStyle = "#047857";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      samples.forEach(([time, rssi], index) => {
+        const x = xToPx(time);
+        const y = yToPx(rssi);
+        if (index === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      const [lastTime, lastRssi] = samples[samples.length - 1];
+      ctx.fillStyle = "#ca8a04";
+      ctx.beginPath();
+      ctx.arc(xToPx(lastTime), yToPx(lastRssi), 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    if (!signalRecent) {
+      ctx.fillStyle = "rgba(185,28,28,0.86)";
+      ctx.font = "bold 13px Arial";
+      ctx.fillText("SIN SEÑAL RECIBIDA", left + 16, (top + bottom) / 2);
+    }
+
+    ctx.fillStyle = "rgba(15,23,42,0.52)";
+    ctx.font = "10px Arial";
+    ctx.fillText("120s", left, height - 8);
+    ctx.fillText("ahora", right - 28, height - 8);
+  }, [data]);
+
+  const signalRecent =
+    data.last_rx_at > 0 && Date.now() / 1000 - data.last_rx_at < 3.5;
+  const status = signalRecent ? "Recibiendo" : "Sin señal";
+  const rssiText =
+    signalRecent && data.last_rssi !== null ? `${data.last_rssi} dBm` : "-- dBm";
+
+  return (
+    <div className="mt-4 rounded-xl border border-black/10 bg-gradient-to-r from-emerald-50 to-yellow-50 p-3">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="text-xs text-black/50">Enlace ESP-NOW</div>
+          <div className="mt-1 text-lg font-semibold text-emerald-700">
+            {rssiText}
+          </div>
+        </div>
+        <div className="text-right">
+          <div
+            className={
+              signalRecent
+                ? "text-xs font-semibold text-emerald-700"
+                : "text-xs font-semibold text-red-700"
+            }
+          >
+            {status}
+          </div>
+          <div className="mt-1 text-[11px] text-black/45">
+            {classifyRssi(signalRecent ? data.last_rssi : null)}
+          </div>
+        </div>
+      </div>
+      <canvas ref={canvasRef} className="mt-2 h-[96px] w-full" />
+      <div className="mt-1 flex justify-between text-[10px] text-black/45">
+        <span>Y: dBm</span>
+        <span>Msg {data.last_seq}</span>
       </div>
     </div>
   );
@@ -353,7 +546,7 @@ export default function Home() {
                       </div>
                     ))}
                   </div>
-                  <div className="mt-4 h-24 rounded-xl border border-black/10 bg-gradient-to-r from-emerald-200/30 to-yellow-200/30" />
+                  <RssiLiveChart />
                 </div>
               </div>
             </div>
