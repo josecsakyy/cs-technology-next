@@ -171,7 +171,7 @@ function RssiLiveChart() {
 
     async function poll() {
       try {
-        const response = await fetch("http://127.0.0.1:8765/data", {
+        const response = await fetch("/api/rssi", {
           cache: "no-store",
         });
         const payload = (await response.json()) as RssiData;
