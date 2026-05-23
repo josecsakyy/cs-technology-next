@@ -154,8 +154,18 @@ function classifyRssi(rssi: number | null) {
   return "muy débil";
 }
 
+function signalColor(rssi: number | null) {
+  if (rssi === null) return "#b91c1c";
+  if (rssi >= -55) return "#047857";
+  if (rssi >= -67) return "#16a34a";
+  if (rssi >= -75) return "#ca8a04";
+  if (rssi >= -85) return "#ea580c";
+  return "#b91c1c";
+}
+
 function RssiLiveChart() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [data, setData] = useState<RssiData>({
     samples: [],
     last_rx_at: 0,
@@ -163,7 +173,7 @@ function RssiLiveChart() {
     last_seq: "-",
     sender_mac: "-",
     receiver_mac: "-",
-    port: "COM6",
+    port: "WiFi",
   });
 
   useEffect(() => {
@@ -189,7 +199,7 @@ function RssiLiveChart() {
     }
 
     poll();
-    const timer = window.setInterval(poll, 500);
+    const timer = window.setInterval(poll, 1000);
     return () => {
       cancelled = true;
       window.clearInterval(timer);
@@ -203,7 +213,7 @@ function RssiLiveChart() {
     const rect = canvas.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
     canvas.width = Math.max(420, Math.floor(rect.width * dpr));
-    canvas.height = Math.max(116, Math.floor(rect.height * dpr));
+    canvas.height = Math.max(180, Math.floor(rect.height * dpr));
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -212,16 +222,16 @@ function RssiLiveChart() {
 
     const width = rect.width;
     const height = rect.height;
-    const left = 38;
-    const right = width - 12;
-    const top = 10;
-    const bottom = height - 26;
+    const left = isFullscreen ? 58 : 44;
+    const right = width - (isFullscreen ? 28 : 18);
+    const top = isFullscreen ? 42 : 30;
+    const bottom = height - (isFullscreen ? 54 : 38);
     const yMin = -95;
-    const yMax = -30;
+    const yMax = -20;
     const windowSeconds = 120;
 
     const signalRecent =
-      data.last_rx_at > 0 && Date.now() / 1000 - data.last_rx_at < 3.5;
+      data.last_rx_at > 0 && Date.now() / 1000 - data.last_rx_at < 12;
 
     const yToPx = (rssi: number) => {
       const value = Math.max(yMin, Math.min(yMax, rssi));
@@ -230,23 +240,37 @@ function RssiLiveChart() {
     };
 
     ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = "rgba(255,255,255,0.58)";
-    ctx.fillRect(0, 0, width, height);
 
-    ctx.strokeStyle = "rgba(15,23,42,0.12)";
+    const background = ctx.createLinearGradient(0, top, 0, bottom);
+    background.addColorStop(0, "rgba(4,120,87,0.22)");
+    background.addColorStop(0.48, "rgba(250,204,21,0.20)");
+    background.addColorStop(1, "rgba(220,38,38,0.18)");
+    ctx.fillStyle = background;
+    ctx.fillRect(left, top, right - left, bottom - top);
+
+    ctx.strokeStyle = "rgba(15,23,42,0.14)";
+    ctx.lineWidth = 1;
     ctx.strokeRect(left, top, right - left, bottom - top);
 
-    ctx.font = "10px Arial";
-    ctx.fillStyle = "rgba(15,23,42,0.55)";
-    [-45, -70, -85].forEach((rssi) => {
+    ctx.font = isFullscreen ? "12px Arial" : "10px Arial";
+    ctx.fillStyle = "rgba(15,23,42,0.58)";
+    [-45, -55, -67, -75, -85].forEach((rssi) => {
       const y = yToPx(rssi);
       ctx.strokeStyle = "rgba(15,23,42,0.12)";
       ctx.beginPath();
       ctx.moveTo(left, y);
       ctx.lineTo(right, y);
       ctx.stroke();
-      ctx.fillText(String(rssi), 8, y + 3);
+      ctx.fillText(String(rssi), isFullscreen ? 18 : 10, y + 3);
     });
+
+    ctx.font = isFullscreen ? "12px Arial" : "10px Arial";
+    ctx.fillStyle = "rgba(4,120,87,0.72)";
+    ctx.fillText("excelente", right - (isFullscreen ? 78 : 66), yToPx(-45) - 8);
+    ctx.fillStyle = "rgba(202,138,4,0.75)";
+    ctx.fillText("media", right - (isFullscreen ? 52 : 44), yToPx(-70) - 8);
+    ctx.fillStyle = "rgba(185,28,28,0.75)";
+    ctx.fillText("muy débil", right - (isFullscreen ? 72 : 62), yToPx(-85) + 16);
 
     const samples = data.samples ?? [];
     if (samples.length >= 2) {
@@ -257,48 +281,113 @@ function RssiLiveChart() {
         Math.max(0, Math.min(1, (time - start) / windowSeconds)) *
           (right - left);
 
-      ctx.strokeStyle = "#047857";
-      ctx.lineWidth = 2.5;
-      ctx.beginPath();
-      samples.forEach(([time, rssi], index) => {
-        const x = xToPx(time);
-        const y = yToPx(rssi);
-        if (index === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
+      const visibleSamples = samples.filter(([time]) => time >= start);
+      const points = visibleSamples.map(([time, rssi], index) => {
+        const from = Math.max(0, index - 2);
+        const to = Math.min(visibleSamples.length, index + 3);
+        const slice = visibleSamples.slice(from, to);
+        const average =
+          slice.reduce((sum, [, value]) => sum + value, 0) / slice.length;
+        return { x: xToPx(time), y: yToPx(average), rssi };
       });
-      ctx.stroke();
+
+      if (points.length >= 2) {
+        const drawSmoothLine = () => {
+          ctx.beginPath();
+          points.forEach((point, index) => {
+            if (index === 0) {
+              ctx.moveTo(point.x, point.y);
+              return;
+            }
+            const previous = points[index - 1];
+            const midX = (previous.x + point.x) / 2;
+            const midY = (previous.y + point.y) / 2;
+            ctx.quadraticCurveTo(previous.x, previous.y, midX, midY);
+          });
+          const lastPoint = points[points.length - 1];
+          ctx.lineTo(lastPoint.x, lastPoint.y);
+        };
+
+        ctx.lineJoin = "round";
+        ctx.lineCap = "round";
+        ctx.strokeStyle = "rgba(255,255,255,0.78)";
+        ctx.lineWidth = isFullscreen ? 8 : 6;
+        drawSmoothLine();
+        ctx.stroke();
+
+        const lineGradient = ctx.createLinearGradient(left, 0, right, 0);
+        lineGradient.addColorStop(0, signalColor(points[0].rssi));
+        lineGradient.addColorStop(1, signalColor(points[points.length - 1].rssi));
+        ctx.strokeStyle = lineGradient;
+        ctx.lineWidth = isFullscreen ? 3.6 : 2.8;
+        drawSmoothLine();
+        ctx.stroke();
+      }
 
       const [lastTime, lastRssi] = samples[samples.length - 1];
-      ctx.fillStyle = "#ca8a04";
+      ctx.fillStyle = signalColor(lastRssi);
+      ctx.strokeStyle = "white";
+      ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(xToPx(lastTime), yToPx(lastRssi), 4, 0, Math.PI * 2);
+      ctx.arc(
+        xToPx(lastTime),
+        yToPx(lastRssi),
+        isFullscreen ? 6 : 4.5,
+        0,
+        Math.PI * 2
+      );
       ctx.fill();
+      ctx.stroke();
     }
 
     if (!signalRecent) {
       ctx.fillStyle = "rgba(185,28,28,0.86)";
-      ctx.font = "bold 13px Arial";
+      ctx.font = isFullscreen ? "bold 18px Arial" : "bold 13px Arial";
       ctx.fillText("SIN SEÑAL RECIBIDA", left + 16, (top + bottom) / 2);
     }
 
     ctx.fillStyle = "rgba(15,23,42,0.52)";
-    ctx.font = "10px Arial";
-    ctx.fillText("120s", left, height - 8);
-    ctx.fillText("ahora", right - 28, height - 8);
-  }, [data]);
+    ctx.font = isFullscreen ? "12px Arial" : "10px Arial";
+    ctx.fillText("120s", left, height - (isFullscreen ? 22 : 14));
+    ctx.fillText(
+      "ahora",
+      right - (isFullscreen ? 36 : 30),
+      height - (isFullscreen ? 22 : 14)
+    );
+  }, [data, isFullscreen]);
 
   const signalRecent =
-    data.last_rx_at > 0 && Date.now() / 1000 - data.last_rx_at < 3.5;
+    data.last_rx_at > 0 && Date.now() / 1000 - data.last_rx_at < 12;
   const status = signalRecent ? "Recibiendo" : "Sin señal";
   const rssiText =
     signalRecent && data.last_rssi !== null ? `${data.last_rssi} dBm` : "-- dBm";
+  const quality = classifyRssi(signalRecent ? data.last_rssi : null);
+  const color = signalColor(signalRecent ? data.last_rssi : null);
 
-  return (
-    <div className="mt-4 rounded-xl border border-black/10 bg-gradient-to-r from-emerald-50 to-yellow-50 p-3">
-      <div className="flex items-start justify-between gap-3">
+  const chartPanel = (fullscreen: boolean) => (
+    <button
+      type="button"
+      onClick={() => setIsFullscreen(true)}
+      className={
+        fullscreen
+          ? "flex h-full w-full flex-col rounded-2xl border border-white/20 bg-white p-5 text-left shadow-2xl"
+          : "mt-4 flex min-h-[230px] w-full flex-col rounded-xl border border-black/10 bg-white p-0 text-left shadow-sm transition hover:border-emerald-600/30 hover:shadow-md"
+      }
+      aria-label="Abrir gráfico RSSI en pantalla completa"
+    >
+      <div
+        className={
+          fullscreen
+            ? "flex items-start justify-between gap-4"
+            : "flex items-start justify-between gap-3 px-4 pt-4"
+        }
+      >
         <div>
           <div className="text-xs text-black/50">Enlace ESP-NOW</div>
-          <div className="mt-1 text-lg font-semibold text-emerald-700">
+          <div
+            className={fullscreen ? "mt-1 text-4xl font-semibold" : "mt-1 text-2xl font-semibold"}
+            style={{ color }}
+          >
             {rssiText}
           </div>
         </div>
@@ -306,23 +395,56 @@ function RssiLiveChart() {
           <div
             className={
               signalRecent
-                ? "text-xs font-semibold text-emerald-700"
-                : "text-xs font-semibold text-red-700"
+                ? "text-sm font-semibold text-emerald-700"
+                : "text-sm font-semibold text-red-700"
             }
           >
             {status}
           </div>
-          <div className="mt-1 text-[11px] text-black/45">
-            {classifyRssi(signalRecent ? data.last_rssi : null)}
-          </div>
+          <div className="mt-1 text-xs text-black/45">{quality}</div>
         </div>
       </div>
-      <canvas ref={canvasRef} className="mt-2 h-[96px] w-full" />
-      <div className="mt-1 flex justify-between text-[10px] text-black/45">
+
+      <canvas
+        ref={fullscreen === isFullscreen ? canvasRef : undefined}
+        className={fullscreen ? "mt-5 min-h-0 w-full flex-1" : "mt-2 h-[150px] w-full px-4"}
+      />
+
+      <div
+        className={
+          fullscreen
+            ? "mt-3 flex justify-between gap-4 text-xs text-black/50"
+            : "flex justify-between gap-3 px-4 pb-3 text-[10px] text-black/45"
+        }
+      >
         <span>Y: dBm</span>
+        <span>Rojo débil · Amarillo medio · Verde excelente</span>
         <span>Msg {data.last_seq}</span>
       </div>
-    </div>
+    </button>
+  );
+
+  return (
+    <>
+      {chartPanel(false)}
+      {isFullscreen && (
+        <div className="fixed inset-0 z-50 bg-black/70 p-4 backdrop-blur-sm md:p-8">
+          <div className="mx-auto flex h-full max-w-6xl flex-col">
+            {chartPanel(true)}
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                setIsFullscreen(false);
+              }}
+              className="absolute right-6 top-6 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black shadow-lg md:right-10 md:top-10"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
