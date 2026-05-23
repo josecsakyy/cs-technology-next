@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { checkRssiDisconnectAlert } from "@/lib/rssi-alerts";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +33,7 @@ async function ensureTable() {
 export async function GET() {
   try {
     await ensureTable();
+    checkRssiDisconnectAlert().catch(() => undefined);
 
     const rows = await prisma.$queryRaw<RssiRow[]>`
       SELECT sequence, rssi, sender_mac, receiver_mac, created_at

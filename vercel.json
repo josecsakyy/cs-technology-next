@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/rssi/check-alert",
+      "schedule": "* * * * *"
+    }
+  ]
+}
