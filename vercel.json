@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/rssi/check-alert",
-      "schedule": "* * * * *"
+      "schedule": "0 12 * * *"
     }
   ]
 }
