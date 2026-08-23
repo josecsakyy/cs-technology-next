@@ -1,37 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getSessionCookieName, verifyAdminSession } from "@/lib/auth";
-
-export async function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
-
-  // Permitimos la página de login sin sesión
-  if (pathname.startsWith("/admin/login")) {
-    return NextResponse.next();
-  }
-
-  // Protegemos todo /admin/*
-  if (pathname.startsWith("/admin")) {
-    const token = req.cookies.get(getSessionCookieName())?.value;
-
-    if (!token) {
-      const url = req.nextUrl.clone();
-      url.pathname = "/admin/login";
-      return NextResponse.redirect(url);
-    }
-
-    try {
-      await verifyAdminSession(token);
-      return NextResponse.next();
-    } catch {
-      const url = req.nextUrl.clone();
-      url.pathname = "/admin/login";
-      return NextResponse.redirect(url);
-    }
-  }
-
-  return NextResponse.next();
-}
-
-export const config = {
-  matcher: ["/admin/:path*"],
-};
+import {NextRequest,NextResponse} from "next/server";
+import {getAgroplantSessionCookieName,getSessionCookieName,verifyAdminSession,verifyAgroplantSession} from "@/lib/auth";
+export async function middleware(req:NextRequest){const{pathname}=req.nextUrl;if(pathname.startsWith("/admin/login")||pathname.startsWith("/agroplant/login"))return NextResponse.next();if(pathname.startsWith("/agroplant")){const token=req.cookies.get(getAgroplantSessionCookieName())?.value;if(!token)return NextResponse.redirect(new URL("/agroplant/login",req.url));try{await verifyAgroplantSession(token);return NextResponse.next();}catch{return NextResponse.redirect(new URL("/agroplant/login",req.url));}}if(pathname.startsWith("/admin")){const token=req.cookies.get(getSessionCookieName())?.value;if(!token)return NextResponse.redirect(new URL("/admin/login",req.url));try{await verifyAdminSession(token);return NextResponse.next();}catch{return NextResponse.redirect(new URL("/admin/login",req.url));}}return NextResponse.next();}
+export const config={matcher:["/admin/:path*","/agroplant/:path*"]};
