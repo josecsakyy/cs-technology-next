@@ -44,6 +44,7 @@ export async function GET() {
 
     const firstTime = rows[0]?.created_at.getTime() ?? Date.now();
     const last = rows[rows.length - 1];
+    const connected = Boolean(last && Date.now() - last.created_at.getTime() < 7000);
 
     return NextResponse.json(
       {
@@ -58,6 +59,10 @@ export async function GET() {
         receiver_mac: last?.receiver_mac ?? "-",
         port: "WiFi",
         serial_error: "",
+        transmitter_connected: connected,
+        receiver_connected: connected,
+        transmitter_ports: connected ? ["RF"] : [],
+        receiver_ports: connected ? ["WiFi"] : [],
       },
       { headers: { "Cache-Control": "no-store" } }
     );
@@ -72,6 +77,10 @@ export async function GET() {
         receiver_mac: "-",
         port: "WiFi",
         serial_error: error instanceof Error ? error.message : "RSSI API error",
+        transmitter_connected: false,
+        receiver_connected: false,
+        transmitter_ports: [],
+        receiver_ports: [],
       },
       { headers: { "Cache-Control": "no-store" }, status: 200 }
     );
