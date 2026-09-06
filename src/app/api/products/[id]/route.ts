@@ -10,7 +10,7 @@ async function requireAdmin() {
   await verifyAdminSession(token);
 }
 
-type Ctx = { params: Promise<{ id: string }> | { id: string } };
+type Ctx = { params: Promise<{ id: string }> };
 
 async function getId(ctx: Ctx): Promise<string> {
   // Next 16 puede pasar params como Promise
