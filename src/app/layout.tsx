@@ -2,7 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "CS Technology",
+  title: "Create Solutions",
   description: "Automatización industrial con PLC, sensores industriales, inteligencia artificial, visión artificial e IoT para agroindustria e industria.",
 };
 
