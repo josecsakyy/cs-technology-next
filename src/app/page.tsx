@@ -1,12 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import CounterPreview from "./CounterPreview";
 import Link from "next/link";
 import { motion, MotionConfig } from "framer-motion";
 
 const WHATSAPP_NUMBER = "5493513454027";
 const WHATSAPP_MESSAGE =
-  "Hola! Quiero información sobre CS Technology. Me interesa una solución de IA, visión artificial o IoT para mi operación.";
+  "Hola! Quiero información sobre CS Technology. Quiero asesoramiento sobre automatización industrial, IA o IoT para mi operación.";
 const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
   WHATSAPP_MESSAGE
 )}`;
@@ -32,12 +33,12 @@ const solutions = [
   { title: "Inteligencia artificial", desc: "Aplicamos IA a problemas concretos de producción: interpretar imágenes, reconocer patrones y asistir tareas operativas.", tag: "IA" },
   { title: "Procesamiento de imágenes", desc: "Transformamos imágenes de cámaras en información útil para detectar, contar e inspeccionar productos.", tag: "VISIÓN" },
   { title: "Soluciones IoT", desc: "Conectamos sensores y equipos para conocer las condiciones de la operación y reunir sus mediciones.", tag: "IoT" },
-  { title: "Automatización", desc: "Integramos hardware y software para reducir tareas repetitivas y acompañar los procesos de trabajo.", tag: "CONTROL" },
+  { title: "Automatización industrial y PLC", desc: "Integración y programación de PLC para automatizar secuencias, coordinar equipos y reducir intervenciones manuales en tu proceso.", tag: "PLC" },
   { title: "Monitoreo", desc: "Diseñamos herramientas para visualizar variables, seguir el estado de los equipos y detectar desvíos.", tag: "DATOS" },
-  { title: "Agroindustria e industria", desc: "Desarrollamos soluciones a medida del entorno productivo, desde la captura de datos hasta su uso en la operación.", tag: "SECTORES" },
+  { title: "Sensores industriales", desc: "Selección e integración de sensores para medir variables del proceso y detectar presencia, posición o condiciones de operación.", tag: "CAMPO" },
 ];
 
-const tech = ["Inteligencia artificial", "Visión artificial", "Procesamiento de imágenes", "IoT y sensores", "Automatización", "Monitoreo"];
+const tech = ["Inteligencia artificial", "Visión artificial", "Procesamiento de imágenes", "PLC", "Sensores industriales", "IoT", "Monitoreo"];
 
 function LogoRound({
   src,
@@ -159,7 +160,7 @@ export default function Home() {
               variants={fade}
               custom={2}
             >
-              Desarrollamos soluciones de inteligencia artificial, procesamiento de imágenes e IoT para agroindustria e industria. Conectamos cámaras, sensores y software para automatizar tareas y monitorear tu operación.
+              Integramos automatización industrial, PLC, sensores y visión artificial para que tengas más control sobre tu producción. Combinamos equipos, conectividad e inteligencia artificial en soluciones a medida para agroindustria e industria.
             </motion.p>
 
             <motion.div
@@ -173,7 +174,7 @@ export default function Home() {
                 href={waLink}
                 className="rounded-2xl bg-emerald-700 px-6 py-3 text-sm font-semibold text-white hover:opacity-95"
               >
-                Hablar por WhatsApp
+                Asesorarme sobre mi proyecto
               </a>
               <a
                 href="#producto"
@@ -253,6 +254,7 @@ export default function Home() {
               </ol>
             </div>
           </div>
+          <CounterPreview />
         </div>
       </section>
 
@@ -261,10 +263,10 @@ export default function Home() {
         <div className="rounded-3xl border border-black/10 bg-white/70 p-8 shadow-sm">
           <p className="text-xs text-black/50">CS Technology</p>
           <h2 className="mt-2 text-2xl font-semibold md:text-3xl">
-            Soluciones principales
+            Tecnología que trabaja en tu producción
           </h2>
           <p className="mt-3 max-w-2xl text-black/65">
-            IA, cámaras y sensores conectados para abordar desafíos de agroindustria e industria.
+            Desde los sensores en campo hasta el control con PLC y el análisis con IA: integramos cada parte según las necesidades de tu proceso.
           </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -299,7 +301,7 @@ export default function Home() {
           {[
             { k: "Automatización", v: "Menos tareas manuales y más atención al proceso productivo." },
             { k: "Visibilidad", v: "Imágenes y mediciones para comprender lo que pasa en tu operación." },
-            { k: "Integración", v: "Cámaras, sensores y software trabajando sobre un mismo objetivo." },
+            { k: "Integración", v: "PLC, sensores, cámaras y software integrados a tu operación." },
           ].map((b, i) => (
             <motion.div
               key={b.k}
@@ -328,7 +330,7 @@ export default function Home() {
               ¿Listo para modernizar tu operación?
             </h3>
             <p className="mt-3 max-w-2xl text-black/65">
-              Contanos qué necesitás contar, detectar, automatizar o monitorear. Evaluamos cómo aplicar IA, visión artificial e IoT a tu proceso.
+              Contanos cómo trabajás y qué querés mejorar. Evaluamos tu proceso y definimos una propuesta con los equipos, la automatización y las herramientas de monitoreo que necesitás.
             </p>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -336,7 +338,7 @@ export default function Home() {
                 href={waLink}
                 className="rounded-2xl bg-emerald-700 px-6 py-3 text-sm font-semibold text-white hover:opacity-95"
               >
-                Contactar por WhatsApp
+                Solicitar asesoramiento
               </a>
 
               <a

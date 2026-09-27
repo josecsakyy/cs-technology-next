@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "CS Technology",
-  description: "Soluciones de inteligencia artificial, datos, visión artificial, IoT y automatización para agroindustria e industria.",
+  description: "Automatización industrial con PLC, sensores industriales, inteligencia artificial, visión artificial e IoT para agroindustria e industria.",
 };
 
 export default function RootLayout({
