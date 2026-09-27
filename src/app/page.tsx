@@ -338,6 +338,11 @@ export default function Home() {
             </a>
           </div>
         </footer>
+        <section aria-label="Colaboración con Agroplant" className="mt-10 flex flex-col items-center gap-5 border-t border-emerald-900/10 py-10 text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">En colaboración con</p>
+          <Image src="/brand/agroplant.png" alt="Logo de Agroplant: Agricultura para el futuro" width={112} height={112} sizes="112px" className="h-28 w-28 rounded-full bg-white object-contain" />
+          <h2 className="text-xl font-semibold text-[#0b1220]">Agroplant</h2>
+        </section>
       </section>
     </div>
     </MotionConfig>
