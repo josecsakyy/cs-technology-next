@@ -207,12 +207,12 @@ export default function Home() {
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/10 via-transparent to-yellow-300/10" />
-            <div className="relative h-[420px] w-full">
+            <div className="relative aspect-[4/5] max-h-[580px] w-full">
               <Image
-                src="/brand/hero-papas.png"
-                alt="Agroindustria"
+                src="/brand/equipo-invernadero.png"
+                alt="Equipo en un invernadero"
                 fill
-                className="object-cover object-[50%_20%]"
+                className="object-cover object-center" sizes="(max-width: 768px) 100vw, 560px"
                 priority
               />
             </div>
@@ -229,35 +229,25 @@ export default function Home() {
 
       {/* PRODUCTO */}
       <section id="producto" className="mx-auto max-w-6xl scroll-mt-24 px-5 py-10">
-        <div className="rounded-3xl border border-black/10 bg-white/80 p-6 shadow-sm md:p-8">
-          <div className="grid gap-8 md:grid-cols-2 md:items-center">
-            <div>
+        <div className="rounded-3xl border border-black/10 bg-white/80 p-5 shadow-sm md:p-8">
+          <div className="flex flex-wrap items-end justify-between gap-5">
+            <div className="max-w-2xl">
               <p className="text-xs font-semibold uppercase tracking-widest text-emerald-700">Uno de nuestros proyectos · En desarrollo</p>
-              <h2 className="mt-3 text-2xl font-semibold md:text-3xl">Contador de minitubérculos con IA</h2>
-              <p className="mt-4 leading-relaxed text-black/65">Estamos desarrollando un sistema de visión artificial para detectar y contar minitubérculos a partir de imágenes. Unimos cámaras, procesamiento de imágenes e inteligencia artificial para automatizar el conteo en agroindustria.</p>
-              <p className="mt-3 leading-relaxed text-black/65">El objetivo es reducir el trabajo manual y obtener información útil del proceso. El desarrollo se centra en adaptar la detección a las condiciones reales de la operación.</p>
-              <a href={waLink} className="mt-6 inline-flex rounded-2xl bg-emerald-700 px-6 py-3 text-sm font-semibold text-white hover:bg-emerald-800">Consultar por el proyecto</a>
+              <h2 className="mt-3 text-2xl font-semibold md:text-3xl">Del conteo automático al control de producción</h2>
+              <p className="mt-4 leading-relaxed text-black/65">Nuestro contador de minitubérculos combina visión artificial con un panel de seguimiento. Detecta unidades en la línea y permite consultar registros por orden y descargar la información en Excel.</p>
             </div>
-            <div className="rounded-3xl border border-emerald-900/10 bg-emerald-50/70 p-6 md:p-8">
-              <p className="text-xs font-semibold uppercase tracking-widest text-emerald-800">De la imagen al conteo</p>
-              <ol className="mt-6 space-y-5">
-                {[
-                  { title: "Captura de imágenes", text: "Cámaras para observar los minitubérculos durante el proceso." },
-                  { title: "Detección con IA", text: "Procesamiento visual para identificar las unidades en las imágenes." },
-                  { title: "Conteo y seguimiento", text: "Información del conteo para acompañar el control de producción." },
-                ].map((step, i) => (
-                  <li key={step.title} className="flex items-start gap-4">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-700 text-sm font-semibold text-white">0{i + 1}</span>
-                    <div><h3 className="font-semibold">{step.title}</h3><p className="mt-1 text-sm leading-relaxed text-black/65">{step.text}</p></div>
-                  </li>
-                ))}
-              </ol>
-            </div>
+            <a href={waLink} className="inline-flex rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-800">Consultar por esta solución</a>
           </div>
-          <CounterPreview />
+          <div className="mt-7 grid min-w-0 gap-5 lg:grid-cols-[1.2fr_1fr]">
+            <figure className="min-w-0 overflow-hidden rounded-2xl border border-black/10 bg-[#10241d]">
+              <div className="flex flex-wrap items-center justify-between gap-2 px-5 py-4 text-xs text-emerald-100"><span className="font-semibold tracking-widest">VISIÓN ARTIFICIAL EN ACCIÓN</span><span>Captura del contador funcionando</span></div>
+              <Image src="/brand/contador-funcionando.png" alt="Contador de minitubérculos funcionando: detecciones de IA y líneas de conteo y verificación sobre la cinta" width={1169} height={647} sizes="(max-width: 1024px) 100vw, 610px" className="h-auto w-full" />
+              <figcaption className="px-5 py-5 text-sm leading-relaxed text-emerald-50/80">Detección de cada unidad y seguimiento sobre la línea de producción. Una aplicación concreta de IA al trabajo en planta.</figcaption>
+            </figure>
+            <CounterPreview />
+          </div>
         </div>
       </section>
-
       {/* SOLUCIONES */}
       <section id="soluciones" className="mx-auto max-w-6xl px-5 py-10">
         <div className="rounded-3xl border border-black/10 bg-white/70 p-8 shadow-sm">
