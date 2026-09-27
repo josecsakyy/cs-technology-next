@@ -1,7 +1,4 @@
 @import "tailwindcss";
-@tailwind base;
-@tailwind components;
-@tailwin utilities;
 
 :root {
   --background: #ffffff;
@@ -32,4 +29,19 @@ body {
 
 html {
   scroll-behavior: smooth;
+}
+/* Decorative homepage motion: no requests or database access. */
+.home-background { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: linear-gradient(135deg, #f1faf4, #fafdf8 50%, #fff9e8); }
+.home-grid { position: absolute; inset: 0; opacity: .3; background-image: linear-gradient(#24785c15 1px, transparent 1px), linear-gradient(90deg, #24785c15 1px, transparent 1px); background-size: 64px 64px; }
+.home-glow { position: absolute; width: min(75vw, 750px); aspect-ratio: 1; border-radius: 50%; animation: home-drift 18s ease-in-out infinite alternate; }
+.home-glow-green { top: -20%; left: -15%; background: radial-gradient(circle, #65d9ac70, transparent 70%); }
+.home-glow-gold { bottom: -25%; right: -10%; background: radial-gradient(circle, #efd66b65, transparent 70%); animation-delay: -6s; animation-direction: alternate-reverse; }
+.home-glow-teal { top: 20%; right: 5%; background: radial-gradient(circle, #68ccc440, transparent 70%); animation-delay: -12s; }
+.home-particle { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: #15856b; opacity: .2; animation: home-float 12s ease-in-out infinite; }
+@keyframes home-drift { from { transform: translate3d(-4%, -4%, 0) scale(.95); } to { transform: translate3d(14%, 16%, 0) scale(1.12); } }
+@keyframes home-float { 0%, 100% { transform: translateY(0); opacity: .12; } 50% { transform: translateY(-35px); opacity: .4; } }
+section[id] { scroll-margin-top: 100px; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .home-glow, .home-particle { animation: none; }
 }

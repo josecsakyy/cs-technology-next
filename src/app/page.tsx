@@ -2,20 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, MotionConfig } from "framer-motion";
 
 const WHATSAPP_NUMBER = "5493513454027";
 const WHATSAPP_MESSAGE =
-  "Hola! Quiero información sobre CS Technology. Me interesa automatización / datos para agroindustria.";
+  "Hola! Quiero información sobre CS Technology. Me interesa una solución de IA, visión artificial o IoT para mi operación.";
 const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
   WHATSAPP_MESSAGE
 )}`;
 
-const EMAIL_TO = "josecsx4@gmail.com";
+const EMAIL_TO = "createsolutionsarg@gmail.com";
 const EMAIL_SUBJECT = "Interesado en CS Technology";
 const EMAIL_BODY =
-  "Hola, estoy interesado en el producto de CS Technology.\n\nMi nombre es:\nEmpresa:\nTeléfono:\nMensaje:\n";
+  "Hola, quiero conversar sobre un proyecto con CS Technology.\n\nMi nombre es:\nEmpresa:\nTeléfono:\nMensaje:\n";
 const mailLink = `mailto:${EMAIL_TO}?subject=${encodeURIComponent(
   EMAIL_SUBJECT
 )}&body=${encodeURIComponent(EMAIL_BODY)}`;
@@ -30,50 +29,15 @@ const fade = {
 };
 
 const solutions = [
-  {
-    title: "IA & Automatización",
-    desc: "Agentes, RAG, visión artificial y flujos para operar más rápido y con menos error.",
-    tag: "IA",
-  },
-  {
-    title: "Trazabilidad & Datos",
-    desc: "Dashboards, KPIs, reporting, calidad de datos y decisiones basadas en evidencia.",
-    tag: "DATA",
-  },
-  {
-    title: "IoT & Sensores",
-    desc: "Telemetría, monitoreo y alertas. Integración con hardware en tiempo real.",
-    tag: "IOT",
-  },
-  {
-    title: "Software a medida",
-    desc: "Webs, paneles admin, APIs y herramientas internas adaptadas a tu operación.",
-    tag: "DEV",
-  },
-  {
-    title: "Integraciones",
-    desc: "ERP/CRM, WhatsApp, pagos, logística, BI. Menos planillas, más automatización.",
-    tag: "API",
-  },
-  {
-    title: "Calidad & QA",
-    desc: "Automatización de tests, control de releases y mejora continua del producto.",
-    tag: "QA",
-  },
+  { title: "Inteligencia artificial", desc: "Aplicamos IA a problemas concretos de producción: interpretar imágenes, reconocer patrones y asistir tareas operativas.", tag: "IA" },
+  { title: "Procesamiento de imágenes", desc: "Transformamos imágenes de cámaras en información útil para detectar, contar e inspeccionar productos.", tag: "VISIÓN" },
+  { title: "Soluciones IoT", desc: "Conectamos sensores y equipos para conocer las condiciones de la operación y reunir sus mediciones.", tag: "IoT" },
+  { title: "Automatización", desc: "Integramos hardware y software para reducir tareas repetitivas y acompañar los procesos de trabajo.", tag: "CONTROL" },
+  { title: "Monitoreo", desc: "Diseñamos herramientas para visualizar variables, seguir el estado de los equipos y detectar desvíos.", tag: "DATOS" },
+  { title: "Agroindustria e industria", desc: "Desarrollamos soluciones a medida del entorno productivo, desde la captura de datos hasta su uso en la operación.", tag: "SECTORES" },
 ];
 
-const tech = ["OpenAI", "PostgreSQL", "Neon", "Vercel", "Next.js", "Node.js"];
-
-type RssiData = {
-  samples: [number, number][];
-  last_rx_at: number;
-  last_rssi: number | null;
-  last_seq: string;
-  sender_mac: string;
-  receiver_mac: string;
-  serial_error?: string;
-  port?: string;
-};
+const tech = ["Inteligencia artificial", "Visión artificial", "Procesamiento de imágenes", "IoT y sensores", "Automatización", "Monitoreo"];
 
 function LogoRound({
   src,
@@ -96,361 +60,22 @@ function LogoRound({
 
 function BackgroundFX() {
   return (
-    <div className="pointer-events-none fixed inset-0 -z-10">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#f4fbf5] via-white to-[#fffdf4]" />
-
-      {/* Grid sutil */}
-      <div
-        className="absolute inset-0 opacity-[0.08]"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, rgba(0,0,0,0.10) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.10) 1px, transparent 1px)",
-          backgroundSize: "56px 56px",
-        }}
-      />
-
-      {/* Blobs animados */}
-      <motion.div
-        className="absolute -top-40 -left-40 h-[520px] w-[520px] rounded-full bg-emerald-300/35 blur-[90px]"
-        animate={{ x: [0, 35, 0], y: [0, 25, 0] }}
-        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute -bottom-48 -right-48 h-[560px] w-[560px] rounded-full bg-yellow-200/45 blur-[110px]"
-        animate={{ x: [0, -30, 0], y: [0, -20, 0] }}
-        transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
-      />
-
-      {/* Partículas suaves */}
-      <div className="absolute inset-0">
-        {Array.from({ length: 14 }).map((_, i) => (
-          <motion.span
-            key={i}
-            className="absolute h-2 w-2 rounded-full bg-emerald-400/20"
-            style={{
-              left: `${(i * 7 + 9) % 100}%`,
-              top: `${(i * 11 + 13) % 100}%`,
-            }}
-            animate={{ y: [0, -14, 0], opacity: [0.12, 0.28, 0.12] }}
-            transition={{
-              duration: 6 + (i % 5),
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: (i % 6) * 0.4,
-            }}
-          />
-        ))}
-      </div>
+    <div aria-hidden="true" className="home-background">
+      <div className="home-grid" />
+      <div className="home-glow home-glow-green" />
+      <div className="home-glow home-glow-gold" />
+      <div className="home-glow home-glow-teal" />
+      {Array.from({ length: 12 }, (_, i) => (
+        <span key={i} className="home-particle" style={{ left: ((i * 17 + 8) % 100) + "%", top: ((i * 23 + 12) % 100) + "%", animationDelay: (-i * 1.3) + "s" }} />
+      ))}
     </div>
-  );
-}
-
-function classifyRssi(rssi: number | null) {
-  if (rssi === null) return "sin señal";
-  if (rssi >= -55) return "excelente";
-  if (rssi >= -67) return "buena";
-  if (rssi >= -75) return "media";
-  if (rssi >= -85) return "débil";
-  return "muy débil";
-}
-
-function signalColor(rssi: number | null) {
-  if (rssi === null) return "#b91c1c";
-  if (rssi >= -55) return "#047857";
-  if (rssi >= -67) return "#16a34a";
-  if (rssi >= -75) return "#ca8a04";
-  if (rssi >= -85) return "#ea580c";
-  return "#b91c1c";
-}
-
-function RssiLiveChart() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [data, setData] = useState<RssiData>({
-    samples: [],
-    last_rx_at: 0,
-    last_rssi: null,
-    last_seq: "-",
-    sender_mac: "-",
-    receiver_mac: "-",
-    port: "WiFi",
-  });
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function poll() {
-      try {
-        const response = await fetch("/api/rssi", {
-          cache: "no-store",
-        });
-        const payload = (await response.json()) as RssiData;
-        if (!cancelled) setData(payload);
-      } catch {
-        if (!cancelled) {
-          setData((current) => ({
-            ...current,
-            last_rx_at: 0,
-            last_rssi: null,
-            serial_error: "No se pudo leer RSSI",
-          }));
-        }
-      }
-    }
-
-    poll();
-    const timer = window.setInterval(poll, 1000);
-    return () => {
-      cancelled = true;
-      window.clearInterval(timer);
-    };
-  }, []);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const rect = canvas.getBoundingClientRect();
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = Math.max(420, Math.floor(rect.width * dpr));
-    canvas.height = Math.max(180, Math.floor(rect.height * dpr));
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    const width = rect.width;
-    const height = rect.height;
-    const left = isFullscreen ? 58 : 44;
-    const right = width - (isFullscreen ? 28 : 18);
-    const top = isFullscreen ? 42 : 30;
-    const bottom = height - (isFullscreen ? 54 : 38);
-    const yMin = -95;
-    const yMax = -20;
-    const windowSeconds = 120;
-
-    const signalRecent =
-      data.last_rx_at > 0 && Date.now() / 1000 - data.last_rx_at < 12;
-
-    const yToPx = (rssi: number) => {
-      const value = Math.max(yMin, Math.min(yMax, rssi));
-      const ratio = (value - yMin) / (yMax - yMin);
-      return bottom - ratio * (bottom - top);
-    };
-
-    ctx.clearRect(0, 0, width, height);
-
-    const background = ctx.createLinearGradient(0, top, 0, bottom);
-    background.addColorStop(0, "rgba(4,120,87,0.22)");
-    background.addColorStop(0.48, "rgba(250,204,21,0.20)");
-    background.addColorStop(1, "rgba(220,38,38,0.18)");
-    ctx.fillStyle = background;
-    ctx.fillRect(left, top, right - left, bottom - top);
-
-    ctx.strokeStyle = "rgba(15,23,42,0.14)";
-    ctx.lineWidth = 1;
-    ctx.strokeRect(left, top, right - left, bottom - top);
-
-    ctx.font = isFullscreen ? "12px Arial" : "10px Arial";
-    ctx.fillStyle = "rgba(15,23,42,0.58)";
-    [-45, -55, -67, -75, -85].forEach((rssi) => {
-      const y = yToPx(rssi);
-      ctx.strokeStyle = "rgba(15,23,42,0.12)";
-      ctx.beginPath();
-      ctx.moveTo(left, y);
-      ctx.lineTo(right, y);
-      ctx.stroke();
-      ctx.fillText(String(rssi), isFullscreen ? 18 : 10, y + 3);
-    });
-
-    ctx.font = isFullscreen ? "12px Arial" : "10px Arial";
-    ctx.fillStyle = "rgba(4,120,87,0.72)";
-    ctx.fillText("excelente", right - (isFullscreen ? 78 : 66), yToPx(-45) - 8);
-    ctx.fillStyle = "rgba(202,138,4,0.75)";
-    ctx.fillText("media", right - (isFullscreen ? 52 : 44), yToPx(-70) - 8);
-    ctx.fillStyle = "rgba(185,28,28,0.75)";
-    ctx.fillText("muy débil", right - (isFullscreen ? 72 : 62), yToPx(-85) + 16);
-
-    const samples = data.samples ?? [];
-    if (samples.length >= 2) {
-      const end = Math.max(windowSeconds, samples[samples.length - 1][0]);
-      const start = Math.max(0, end - windowSeconds);
-      const xToPx = (time: number) =>
-        left +
-        Math.max(0, Math.min(1, (time - start) / windowSeconds)) *
-          (right - left);
-
-      const visibleSamples = samples.filter(([time]) => time >= start);
-      const points = visibleSamples.map(([time, rssi], index) => {
-        const from = Math.max(0, index - 2);
-        const to = Math.min(visibleSamples.length, index + 3);
-        const slice = visibleSamples.slice(from, to);
-        const average =
-          slice.reduce((sum, [, value]) => sum + value, 0) / slice.length;
-        return { x: xToPx(time), y: yToPx(average), rssi };
-      });
-
-      if (points.length >= 2) {
-        const drawSmoothLine = () => {
-          ctx.beginPath();
-          points.forEach((point, index) => {
-            if (index === 0) {
-              ctx.moveTo(point.x, point.y);
-              return;
-            }
-            const previous = points[index - 1];
-            const midX = (previous.x + point.x) / 2;
-            const midY = (previous.y + point.y) / 2;
-            ctx.quadraticCurveTo(previous.x, previous.y, midX, midY);
-          });
-          const lastPoint = points[points.length - 1];
-          ctx.lineTo(lastPoint.x, lastPoint.y);
-        };
-
-        ctx.lineJoin = "round";
-        ctx.lineCap = "round";
-        ctx.strokeStyle = "rgba(255,255,255,0.78)";
-        ctx.lineWidth = isFullscreen ? 8 : 6;
-        drawSmoothLine();
-        ctx.stroke();
-
-        const lineGradient = ctx.createLinearGradient(left, 0, right, 0);
-        lineGradient.addColorStop(0, signalColor(points[0].rssi));
-        lineGradient.addColorStop(1, signalColor(points[points.length - 1].rssi));
-        ctx.strokeStyle = lineGradient;
-        ctx.lineWidth = isFullscreen ? 3.6 : 2.8;
-        drawSmoothLine();
-        ctx.stroke();
-      }
-
-      const [lastTime, lastRssi] = samples[samples.length - 1];
-      ctx.fillStyle = signalColor(lastRssi);
-      ctx.strokeStyle = "white";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(
-        xToPx(lastTime),
-        yToPx(lastRssi),
-        isFullscreen ? 6 : 4.5,
-        0,
-        Math.PI * 2
-      );
-      ctx.fill();
-      ctx.stroke();
-    }
-
-    if (!signalRecent) {
-      ctx.fillStyle = "rgba(185,28,28,0.86)";
-      ctx.font = isFullscreen ? "bold 18px Arial" : "bold 13px Arial";
-      ctx.fillText("SIN SEÑAL RECIBIDA", left + 16, (top + bottom) / 2);
-    }
-
-    ctx.fillStyle = "rgba(15,23,42,0.52)";
-    ctx.font = isFullscreen ? "12px Arial" : "10px Arial";
-    ctx.fillText("120s", left, height - (isFullscreen ? 22 : 14));
-    ctx.fillText(
-      "ahora",
-      right - (isFullscreen ? 36 : 30),
-      height - (isFullscreen ? 22 : 14)
-    );
-  }, [data, isFullscreen]);
-
-  const signalRecent =
-    data.last_rx_at > 0 && Date.now() / 1000 - data.last_rx_at < 12;
-  const status = signalRecent ? "Recibiendo" : "Sin señal";
-  const rssiText =
-    signalRecent && data.last_rssi !== null ? `${data.last_rssi} dBm` : "-- dBm";
-  const quality = classifyRssi(signalRecent ? data.last_rssi : null);
-  const color = signalColor(signalRecent ? data.last_rssi : null);
-
-  const chartPanel = (fullscreen: boolean) => (
-    <button
-      type="button"
-      onClick={() => setIsFullscreen(true)}
-      className={
-        fullscreen
-          ? "flex h-full w-full flex-col rounded-2xl border border-white/20 bg-white p-5 text-left shadow-2xl"
-          : "mt-4 flex min-h-[230px] w-full flex-col rounded-xl border border-black/10 bg-white p-0 text-left shadow-sm transition hover:border-emerald-600/30 hover:shadow-md"
-      }
-      aria-label="Abrir gráfico RSSI en pantalla completa"
-    >
-      <div
-        className={
-          fullscreen
-            ? "flex items-start justify-between gap-4"
-            : "flex items-start justify-between gap-3 px-4 pt-4"
-        }
-      >
-        <div>
-          <div className="text-xs text-black/50">Enlace ESP-NOW</div>
-          <div
-            className={fullscreen ? "mt-1 text-4xl font-semibold" : "mt-1 text-2xl font-semibold"}
-            style={{ color }}
-          >
-            {rssiText}
-          </div>
-        </div>
-        <div className="text-right">
-          <div
-            className={
-              signalRecent
-                ? "text-sm font-semibold text-emerald-700"
-                : "text-sm font-semibold text-red-700"
-            }
-          >
-            {status}
-          </div>
-          <div className="mt-1 text-xs text-black/45">{quality}</div>
-        </div>
-      </div>
-
-      <canvas
-        ref={fullscreen === isFullscreen ? canvasRef : undefined}
-        className={fullscreen ? "mt-5 min-h-0 w-full flex-1" : "mt-2 h-[150px] w-full px-4"}
-      />
-
-      <div
-        className={
-          fullscreen
-            ? "mt-3 flex justify-between gap-4 text-xs text-black/50"
-            : "flex justify-between gap-3 px-4 pb-3 text-[10px] text-black/45"
-        }
-      >
-        <span>Y: dBm</span>
-        <span>Rojo débil · Amarillo medio · Verde excelente</span>
-        <span>Msg {data.last_seq}</span>
-      </div>
-    </button>
-  );
-
-  return (
-    <>
-      {chartPanel(false)}
-      {isFullscreen && (
-        <div className="fixed inset-0 z-50 bg-black/70 p-4 backdrop-blur-sm md:p-8">
-          <div className="mx-auto flex h-full max-w-6xl flex-col">
-            {chartPanel(true)}
-            <button
-              type="button"
-              onClick={(event) => {
-                event.stopPropagation();
-                setIsFullscreen(false);
-              }}
-              className="absolute right-6 top-6 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black shadow-lg md:right-10 md:top-10"
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
-      )}
-    </>
   );
 }
 
 export default function Home() {
   return (
-    <div className="min-h-screen text-[#0b1220]">
+    <MotionConfig reducedMotion="user">
+    <div className="relative isolate min-h-screen text-[#0b1220]">
       <BackgroundFX />
 
       {/* NAVBAR */}
@@ -463,23 +88,23 @@ export default function Home() {
                 CS <span className="text-emerald-700">Technology</span>
               </div>
               <div className="text-[12px] text-black/55">
-                Agroindustria + Software + IA
+                IA · Agroindustria · Industria
               </div>
             </div>
           </Link>
 
           {/* IMPORTANTE: /#... para historial (Atrás vuelve) */}
           <nav className="hidden items-center gap-7 md:flex text-sm text-black/70">
-            <a href="/#producto" className="hover:text-black">
-              Producto
+            <a href="#producto" className="hover:text-black">
+              Proyectos
             </a>
-            <a href="/#soluciones" className="hover:text-black">
+            <a href="#soluciones" className="hover:text-black">
               Soluciones
             </a>
-            <a href="/#beneficios" className="hover:text-black">
+            <a href="#beneficios" className="hover:text-black">
               Beneficios
             </a>
-            <a href="/#contacto" className="hover:text-black">
+            <a href="#contacto" className="hover:text-black">
               Contacto
             </a>
             <Link href="/agroplant/login" className="rounded-xl bg-emerald-700 px-4 py-2 font-semibold text-white hover:bg-emerald-800">
@@ -514,7 +139,7 @@ export default function Home() {
               custom={0}
             >
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              Tecnología aplicada al agro • CS Technology
+              Inteligencia aplicada a la producción
             </motion.div>
 
             <motion.h1
@@ -524,9 +149,7 @@ export default function Home() {
               variants={fade}
               custom={1}
             >
-              Automatizá, medí y escalá tu operación con{" "}
-              <span className="text-emerald-700">IA</span> y{" "}
-              <span className="text-yellow-600">datos</span>.
+              Automatizá, medí y escalá tu operación con <span className="text-emerald-700">IA</span> y <span className="text-yellow-600">datos</span>.
             </motion.h1>
 
             <motion.p
@@ -536,9 +159,7 @@ export default function Home() {
               variants={fade}
               custom={2}
             >
-              Software + analítica + integraciones para agroindustria: trazabilidad,
-              paneles de control, automatización y herramientas internas que mejoran la
-              eficiencia real del día a día.
+              Desarrollamos soluciones de inteligencia artificial, procesamiento de imágenes e IoT para agroindustria e industria. Conectamos cámaras, sensores y software para automatizar tareas y monitorear tu operación.
             </motion.p>
 
             <motion.div
@@ -555,15 +176,15 @@ export default function Home() {
                 Hablar por WhatsApp
               </a>
               <a
-                href="/#producto"
+                href="#producto"
                 className="rounded-2xl border border-black/10 bg-white/70 px-6 py-3 text-sm font-semibold text-black hover:bg-black/[0.03]"
               >
-                Ver producto
+                Explorar proyectos
               </a>
             </motion.div>
 
             <div className="mt-10">
-              <p className="text-xs text-black/50">Tecnologías que usamos</p>
+              <p className="text-xs text-black/50">Tecnologías que aplicamos</p>
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 {tech.map((t) => (
                   <span
@@ -606,74 +227,30 @@ export default function Home() {
       </section>
 
       {/* PRODUCTO */}
-      <section id="producto" className="mx-auto max-w-6xl px-5 py-10">
-        <div className="rounded-3xl border border-black/10 bg-white/70 p-8 shadow-sm">
+      <section id="producto" className="mx-auto max-w-6xl scroll-mt-24 px-5 py-10">
+        <div className="rounded-3xl border border-black/10 bg-white/80 p-6 shadow-sm md:p-8">
           <div className="grid gap-8 md:grid-cols-2 md:items-center">
             <div>
-              <p className="text-xs text-black/50">Producto</p>
-              <h2 className="mt-2 text-2xl font-semibold md:text-3xl">
-                Panel de control + automatización para tu operación
-              </h2>
-              <p className="mt-3 text-black/65">
-                Centralizá indicadores, alertas y flujos. Menos “parches”, más sistema.
-              </p>
-
-              <div className="mt-6 grid gap-3">
-                {[
-                  "KPIs de producción y calidad en tiempo real",
-                  "Alertas automáticas (WhatsApp / email)",
-                  "Trazabilidad por lote / campaña / planta",
-                  "Integración con ERP/CRM y sensores",
-                ].map((x) => (
-                  <div
-                    key={x}
-                    className="rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm text-black/70"
-                  >
-                    {x}
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <a
-                  href={waLink}
-                  className="inline-flex rounded-2xl bg-emerald-700 px-6 py-3 text-sm font-semibold text-white hover:opacity-95"
-                >
-                  Pedir demo por WhatsApp
-                </a>
-                <a
-                  href={mailLink}
-                  className="inline-flex rounded-2xl border border-black/10 bg-white px-6 py-3 text-sm font-semibold text-black hover:bg-black/[0.03]"
-                >
-                  Enviar email
-                </a>
-              </div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-emerald-700">Uno de nuestros proyectos · En desarrollo</p>
+              <h2 className="mt-3 text-2xl font-semibold md:text-3xl">Contador de minitubérculos con IA</h2>
+              <p className="mt-4 leading-relaxed text-black/65">Estamos desarrollando un sistema de visión artificial para detectar y contar minitubérculos a partir de imágenes. Unimos cámaras, procesamiento de imágenes e inteligencia artificial para automatizar el conteo en agroindustria.</p>
+              <p className="mt-3 leading-relaxed text-black/65">El objetivo es reducir el trabajo manual y obtener información útil del proceso. El desarrollo se centra en adaptar la detección a las condiciones reales de la operación.</p>
+              <a href={waLink} className="mt-6 inline-flex rounded-2xl bg-emerald-700 px-6 py-3 text-sm font-semibold text-white hover:bg-emerald-800">Consultar por el proyecto</a>
             </div>
-
-            <div className="relative overflow-hidden rounded-3xl border border-black/10 bg-white shadow-sm">
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-yellow-300/10" />
-              <div className="relative p-6">
-                <div className="rounded-2xl border border-black/10 bg-white p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="text-sm font-semibold">Dashboard</div>
-                    <div className="text-xs text-black/50">Hoy</div>
-                  </div>
-                  <div className="mt-4 grid grid-cols-2 gap-3">
-                    {["Eficiencia", "Rendimiento", "Calidad", "Alertas"].map((k) => (
-                      <div
-                        key={k}
-                        className="rounded-xl border border-black/10 bg-white px-3 py-4"
-                      >
-                        <div className="text-xs text-black/50">{k}</div>
-                        <div className="mt-2 text-lg font-semibold text-emerald-700">
-                          {Math.floor(70 + Math.random() * 25)}%
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <RssiLiveChart />
-                </div>
-              </div>
+            <div className="rounded-3xl border border-emerald-900/10 bg-emerald-50/70 p-6 md:p-8">
+              <p className="text-xs font-semibold uppercase tracking-widest text-emerald-800">De la imagen al conteo</p>
+              <ol className="mt-6 space-y-5">
+                {[
+                  { title: "Captura de imágenes", text: "Cámaras para observar los minitubérculos durante el proceso." },
+                  { title: "Detección con IA", text: "Procesamiento visual para identificar las unidades en las imágenes." },
+                  { title: "Conteo y seguimiento", text: "Información del conteo para acompañar el control de producción." },
+                ].map((step, i) => (
+                  <li key={step.title} className="flex items-start gap-4">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-700 text-sm font-semibold text-white">0{i + 1}</span>
+                    <div><h3 className="font-semibold">{step.title}</h3><p className="mt-1 text-sm leading-relaxed text-black/65">{step.text}</p></div>
+                  </li>
+                ))}
+              </ol>
             </div>
           </div>
         </div>
@@ -687,7 +264,7 @@ export default function Home() {
             Soluciones principales
           </h2>
           <p className="mt-3 max-w-2xl text-black/65">
-            Datos confiables, automatización y software robusto para agroindustria.
+            IA, cámaras y sensores conectados para abordar desafíos de agroindustria e industria.
           </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -709,9 +286,7 @@ export default function Home() {
                 </div>
                 <p className="mt-3 text-sm text-black/65">{s.desc}</p>
                 <div className="mt-5 h-px w-full bg-black/10" />
-                <p className="mt-4 text-xs text-black/45 group-hover:text-black/60">
-                  Ver detalles →
-                </p>
+                <a href={waLink} className="mt-4 inline-block text-xs font-semibold text-emerald-800 hover:underline">Consultar sobre {s.title.toLowerCase()} →</a>
               </motion.div>
             ))}
           </div>
@@ -722,9 +297,9 @@ export default function Home() {
       <section id="beneficios" className="mx-auto max-w-6xl px-5 pb-10">
         <div className="grid gap-6 md:grid-cols-3">
           {[
-            { k: "Tiempo", v: "Procesos más rápidos y menos errores operativos." },
-            { k: "Control", v: "KPIs claros y trazabilidad end-to-end." },
-            { k: "Escala", v: "Infraestructura lista para crecer sin romperse." },
+            { k: "Automatización", v: "Menos tareas manuales y más atención al proceso productivo." },
+            { k: "Visibilidad", v: "Imágenes y mediciones para comprender lo que pasa en tu operación." },
+            { k: "Integración", v: "Cámaras, sensores y software trabajando sobre un mismo objetivo." },
           ].map((b, i) => (
             <motion.div
               key={b.k}
@@ -744,7 +319,7 @@ export default function Home() {
 
       {/* CONTACTO */}
       <section id="contacto" className="mx-auto max-w-6xl px-5 pb-20">
-        <div className="relative overflow-hidden rounded-3xl border border-black/10 bg-white/70 p-10 shadow-sm">
+        <div className="relative overflow-hidden rounded-3xl border border-black/10 bg-white/70 p-6 shadow-sm md:p-10">
           <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-emerald-300/30 blur-[80px]" />
           <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-yellow-200/35 blur-[80px]" />
 
@@ -753,7 +328,7 @@ export default function Home() {
               ¿Listo para modernizar tu operación?
             </h3>
             <p className="mt-3 max-w-2xl text-black/65">
-              Contanos tu caso y te proponemos un plan rápido para automatizar, medir y escalar.
+              Contanos qué necesitás contar, detectar, automatizar o monitorear. Evaluamos cómo aplicar IA, visión artificial e IoT a tu proceso.
             </p>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -772,7 +347,7 @@ export default function Home() {
               </a>
             </div>
 
-            <p className="mt-4 text-xs text-black/45">
+            <p className="mt-4 break-words text-xs text-black/60">
               WhatsApp: +{WHATSAPP_NUMBER} · Email: {EMAIL_TO}
             </p>
           </div>
@@ -781,21 +356,22 @@ export default function Home() {
         <footer className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-black/10 pt-6 text-xs text-black/50 md:flex-row">
           <p>© {new Date().getFullYear()} CS Technology</p>
           <div className="flex gap-4">
-            <a className="hover:text-black" href="/#producto">
-              Producto
+            <a className="hover:text-black" href="#producto">
+              Proyectos
             </a>
-            <a className="hover:text-black" href="/#soluciones">
+            <a className="hover:text-black" href="#soluciones">
               Soluciones
             </a>
-            <a className="hover:text-black" href="/#beneficios">
+            <a className="hover:text-black" href="#beneficios">
               Beneficios
             </a>
-            <a className="hover:text-black" href="/#contacto">
+            <a className="hover:text-black" href="#contacto">
               Contacto
             </a>
           </div>
         </footer>
       </section>
     </div>
+    </MotionConfig>
   );
 }
