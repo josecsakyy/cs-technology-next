@@ -38,7 +38,6 @@ const solutions = [
   { title: "Sensores industriales", desc: "Selección e integración de sensores para medir variables del proceso y detectar presencia, posición o condiciones de operación.", tag: "CAMPO" },
 ];
 
-const tech = ["Inteligencia artificial", "Visión artificial", "Procesamiento de imágenes", "PLC", "Sensores industriales", "IoT", "Monitoreo"];
 
 function LogoRound({
   src,
@@ -165,7 +164,7 @@ export default function Home() {
                 href={waLink}
                 className="rounded-2xl bg-emerald-700 px-6 py-3 text-sm font-semibold text-white hover:opacity-95"
               >
-                Asesorarme sobre mi proyecto
+                Impulsá tu próximo proyecto
               </a>
               <a
                 href="#producto"
@@ -174,20 +173,6 @@ export default function Home() {
                 Explorar proyectos
               </a>
             </motion.div>
-
-            <div className="mt-10">
-              <p className="text-xs text-black/50">Tecnologías que aplicamos</p>
-              <div className="mt-3 flex flex-wrap items-center gap-2">
-                {tech.map((t) => (
-                  <span
-                    key={t}
-                    className="rounded-full border border-black/10 bg-white/70 px-3 py-1 text-xs text-black/70"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* IMAGEN HERO */}
@@ -230,10 +215,10 @@ export default function Home() {
             <a href={waLink} className="inline-flex rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-800">Consultar por esta solución</a>
           </div>
           <div className="mt-7 grid min-w-0 gap-5 lg:grid-cols-[1.2fr_1fr]">
-            <figure className="min-w-0 overflow-hidden rounded-2xl border border-black/10 bg-[#10241d]">
-              <div className="flex flex-wrap items-center justify-between gap-2 px-5 py-4 text-xs text-emerald-100"><span className="font-semibold tracking-widest">VISIÓN ARTIFICIAL EN ACCIÓN</span><span>Captura del contador funcionando</span></div>
+            <figure className="min-w-0 overflow-hidden rounded-2xl border border-black/10 bg-white">
+              <div className="flex flex-wrap items-center justify-between gap-2 px-5 py-4 text-xs text-emerald-800"><span className="font-semibold tracking-widest">VISIÓN ARTIFICIAL EN ACCIÓN</span><span>Captura del contador funcionando</span></div>
               <Image src="/brand/contador-funcionando.png" alt="Contador de minitubérculos funcionando: detecciones de IA y líneas de conteo y verificación sobre la cinta" width={1169} height={647} sizes="(max-width: 1024px) 100vw, 610px" className="h-auto w-full" />
-              <figcaption className="px-5 py-5 text-sm leading-relaxed text-emerald-50/80">Detección de cada unidad y seguimiento sobre la línea de producción. Una aplicación concreta de IA al trabajo en planta.</figcaption>
+              <figcaption className="px-5 py-5 text-sm leading-relaxed text-black/65">Detección de cada unidad y seguimiento sobre la línea de producción. Una aplicación concreta de IA al trabajo en planta.</figcaption>
             </figure>
             <CounterPreview />
           </div>
@@ -269,7 +254,7 @@ export default function Home() {
                 </div>
                 <p className="mt-3 text-sm text-black/65">{s.desc}</p>
                 <div className="mt-5 h-px w-full bg-black/10" />
-                <a href={waLink} className="mt-4 inline-block text-xs font-semibold text-emerald-800 hover:underline">Consultar sobre {s.title.toLowerCase()} →</a>
+                <a href={waLink} className="mt-4 inline-block text-xs font-semibold text-emerald-800 hover:underline">Consultar sobre {s.title.toLowerCase()}</a>
               </motion.div>
             ))}
           </div>
@@ -319,7 +304,7 @@ export default function Home() {
                 href={waLink}
                 className="rounded-2xl bg-emerald-700 px-6 py-3 text-sm font-semibold text-white hover:opacity-95"
               >
-                Solicitar asesoramiento
+                Hablemos de tu proyecto
               </a>
 
               <a
