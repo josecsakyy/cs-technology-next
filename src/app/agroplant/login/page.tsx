@@ -12,7 +12,7 @@ export default function Login() {
     event.preventDefault(); setLoading(true); setError("");
     try {
       const response = await fetch("/api/agroplant/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ username, password }) });
-      if (response.ok) { location.href = window.matchMedia("(display-mode: standalone)").matches ? "/agroplant/conteo" : "/agroplant"; return; }
+      if (response.ok) { location.href = window.matchMedia("(display-mode: standalone)").matches ? "/agroplant/conteo" : "/agroplant/red"; return; }
       const result = await response.json();
       setError(result.error || "No se pudo iniciar sesión.");
     } catch { setError("No pudimos conectarnos. Revisá tu conexión e intentá nuevamente."); }
